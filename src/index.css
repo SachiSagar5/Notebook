@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* ═══════════════════════════════════════
+   Paper textures — white pages
+   ═══════════════════════════════════════ */
+.paper-lined {
+  background-color: #ffffff;
+  background-image: linear-gradient(to bottom, transparent 31px, #e3eaf2 31px, #e3eaf2 32px, transparent 32px);
+  background-size: 100% 32px;
+}
+.paper-grid {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(to right, #eef2f6 1px, transparent 1px),
+    linear-gradient(to bottom, #eef2f6 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.paper-dotted {
+  background-color: #ffffff;
+  background-image: radial-gradient(#d7dfea 1.3px, transparent 1.3px);
+  background-size: 24px 24px;
+}
+.paper-plain {
+  background-color: #ffffff;
+}
+
+.margin-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 46px;
+  width: 2px;
+  background: #f4b8c1;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════
+   Realistic 3D Page Turn
+   Two-page stack: behind (static) + top (animates)
+   Top page rotates 0° → −180° around left spine.
+   backface-visibility:hidden ensures the behind
+   page shows through once the page passes 90°.
+   ═══════════════════════════════════════ */
+
+/* ── Forward (next page) ── */
+@keyframes flip-forward {
+  0% {
+    transform: perspective(2200px) rotateY(0deg) scaleX(1);
+    filter: brightness(1);
+    box-shadow:
+      5px 5px 20px rgba(0,0,0,.12),
+      inset 8px 0 24px -14px rgba(0,0,0,.22);
+  }
+  10% {
+    transform: perspective(2200px) rotateY(-6deg) scaleX(1.01);
+    filter: brightness(0.98);
+    box-shadow:
+      5px 5px 20px rgba(0,0,0,.12),
+      inset 18px 0 30px -10px rgba(0,0,0,.35);
+  }
+  35% {
+    transform: perspective(2200px) rotateY(-45deg) scaleX(0.97);
+    filter: brightness(0.94);
+    box-shadow:
+      4px 3px 28px rgba(0,0,0,.18),
+      inset 6px 0 40px -6px rgba(0,0,0,.45);
+  }
+  55% {
+    transform: perspective(2200px) rotateY(-82deg) scaleX(0.90);
+    filter: brightness(0.88);
+    box-shadow:
+      2px 2px 20px rgba(0,0,0,.1),
+      inset 2px 0 30px 0 rgba(0,0,0,.5);
+  }
+  70% {
+    /* Just past edge-on; behind page is now dominant */
+    transform: perspective(2200px) rotateY(-105deg) scaleX(0.93);
+    filter: brightness(0.92);
+    box-shadow:
+      -3px 3px 16px rgba(0,0,0,.08),
+      inset -8px 0 20px 0 rgba(0,0,0,.2);
+  }
+  88% {
+    transform: perspective(2200px) rotateY(-160deg) scaleX(1.01);
+    filter: brightness(0.97);
+    box-shadow:
+      -4px 4px 14px rgba(0,0,0,.06),
+      inset -14px 0 16px -8px rgba(0,0,0,.15);
+  }
+  100% {
+    transform: perspective(2200px) rotateY(-180deg) scaleX(1);
+    filter: brightness(1);
+    box-shadow:
+      -4px 4px 12px rgba(0,0,0,.05),
+      inset -8px 0 14px -8px rgba(0,0,0,.1);
+  }
+}
+
+/* ── Backward (prev page) ── */
+@keyframes flip-backward {
+  0% {
+    transform: perspective(2200px) rotateY(-180deg) scaleX(1);
+    filter: brightness(1);
+    box-shadow:
+      -4px 4px 12px rgba(0,0,0,.05),
+      inset -8px 0 14px -8px rgba(0,0,0,.1);
+  }
+  12% {
+    transform: perspective(2200px) rotateY(-160deg) scaleX(1.01);
+    filter: brightness(0.97);
+    box-shadow:
+      -4px 4px 14px rgba(0,0,0,.06),
+      inset -14px 0 16px -8px rgba(0,0,0,.15);
+  }
+  30% {
+    transform: perspective(2200px) rotateY(-105deg) scaleX(0.93);
+    filter: brightness(0.92);
+    box-shadow:
+      -3px 3px 16px rgba(0,0,0,.08),
+      inset -8px 0 20px 0 rgba(0,0,0,.2);
+  }
+  45% {
+    transform: perspective(2200px) rotateY(-82deg) scaleX(0.90);
+    filter: brightness(0.88);
+    box-shadow:
+      2px 2px 20px rgba(0,0,0,.1),
+      inset 2px 0 30px 0 rgba(0,0,0,.5);
+  }
+  65% {
+    transform: perspective(2200px) rotateY(-45deg) scaleX(0.97);
+    filter: brightness(0.94);
+    box-shadow:
+      4px 3px 28px rgba(0,0,0,.18),
+      inset 6px 0 40px -6px rgba(0,0,0,.45);
+  }
+  90% {
+    transform: perspective(2200px) rotateY(-6deg) scaleX(1.01);
+    filter: brightness(0.98);
+    box-shadow:
+      5px 5px 20px rgba(0,0,0,.12),
+      inset 18px 0 30px -10px rgba(0,0,0,.35);
+  }
+  100% {
+    transform: perspective(2200px) rotateY(0deg) scaleX(1);
+    filter: brightness(1);
+    box-shadow:
+      5px 5px 20px rgba(0,0,0,.12),
+      inset 8px 0 24px -14px rgba(0,0,0,.22);
+  }
+}
+
+.animate-book-forward {
+  animation: flip-forward 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) both;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, filter, box-shadow;
+}
+
+.animate-book-back {
+  animation: flip-backward 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) both;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, filter, box-shadow;
+}
+
+/* ═══════════════════════════════════════
+   Fade-up
+   ═══════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.3s ease both; }
+
+/* ═══════════════════════════════════════
+   Utilities
+   ═══════════════════════════════════════ */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Subtle page-corner lift hint on hover */
+.page-corner-hint::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.06) 50%);
+  border-radius: 0 0 6px 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+.page-corner-hint:hover::after {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.1) 50%);
+}

@@ -14,16 +14,9 @@ interface Props {
   onBack: () => void;
   onExport: () => void;
   exporting: boolean;
-  syncSlot: React.ReactNode;
 }
 
-/**
- * Editor with realistic page-flip.
- * Uses a two-page stack: the top page animates away (rotateY around the spine)
- * while the page behind is always visible. This creates a natural page-turn
- * effect with fold shadows.
- */
-export function Editor({ notebook, onChange, onBack, onExport, exporting, syncSlot }: Props) {
+export function Editor({ notebook, onChange, onBack, onExport, exporting }: Props) {
   const [index, setIndex] = useState(-1);
   const [selected, setSelected] = useState<string | null>(null);
   const [flipDir, setFlipDir] = useState<'next' | 'prev' | null>(null);
@@ -105,14 +98,14 @@ export function Editor({ notebook, onChange, onBack, onExport, exporting, syncSl
     if (flipDir || index >= notebook.pages.length - 1) return;
     setSelected(null);
     setFlipDir('next');
-    setTimeout(() => { setIndex((i) => i + 1); setFlipDir(null); }, 700);
+    setTimeout(() => { setIndex((i) => i + 1); setFlipDir(null); }, 750);
   }
 
   function goPrev() {
     if (flipDir || index <= -1) return;
     setSelected(null);
     setFlipDir('prev');
-    setTimeout(() => { setIndex((i) => i - 1); setFlipDir(null); }, 700);
+    setTimeout(() => { setIndex((i) => i - 1); setFlipDir(null); }, 750);
   }
 
   function addPage() {
@@ -145,21 +138,20 @@ export function Editor({ notebook, onChange, onBack, onExport, exporting, syncSl
   }, [flipDir, index, notebook.pages.length]);
 
   return (
-    <div className="flex h-full flex-col bg-gradient-to-b from-stone-100 via-stone-50 to-stone-100">
+    <div className="flex h-full flex-col bg-gradient-to-b from-stone-100 via-stone-50 to-stone-100 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
       {/* ─── Top bar ─── */}
-      <header className="flex shrink-0 items-center gap-2 border-b border-stone-200 bg-white/80 px-3 py-2 backdrop-blur sm:px-5">
+      <header className="flex shrink-0 items-center gap-2 border-b border-stone-200 bg-white/80 px-3 py-2 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80 sm:px-5">
         <button onClick={onBack}
-          className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-medium text-stone-600 transition hover:bg-stone-100">
+          className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-medium text-stone-600 transition hover:bg-stone-100 dark:text-slate-400 dark:hover:bg-slate-800">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
           <span className="hidden sm:inline">Shelf</span>
         </button>
         <div className="min-w-0 flex-1">
-          <h2 className="truncate text-sm font-bold text-stone-800">{notebook.title}</h2>
+          <h2 className="truncate text-sm font-bold text-stone-800 dark:text-slate-200">{notebook.title}</h2>
         </div>
         <PageSizeSelector value={notebook.pageSize} onChange={(s) => update({ pageSize: s })} />
-        {syncSlot}
         <button onClick={onExport} disabled={exporting}
           className="flex shrink-0 items-center gap-1.5 rounded-xl bg-rose-500 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-600 disabled:opacity-50">
           {exporting ? <Spinner /> : (
@@ -197,7 +189,7 @@ export function Editor({ notebook, onChange, onBack, onExport, exporting, syncSl
       >
         {/* Nav arrows */}
         <button onClick={goPrev} disabled={index <= -1 || !!flipDir}
-          className="absolute left-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-stone-600 shadow-md transition hover:bg-white hover:text-indigo-600 disabled:opacity-0 sm:flex">
+          className="absolute left-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-stone-600 shadow-md transition hover:bg-white hover:text-indigo-600 disabled:opacity-0 sm:flex dark:bg-slate-800/90 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-indigo-400">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M15 18l-6-6 6-6" /></svg>
         </button>
 
@@ -228,28 +220,28 @@ export function Editor({ notebook, onChange, onBack, onExport, exporting, syncSl
         </div>
 
         <button onClick={goNext} disabled={index >= notebook.pages.length - 1 || !!flipDir}
-          className="absolute right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-stone-600 shadow-md transition hover:bg-white hover:text-indigo-600 disabled:opacity-0 sm:flex">
+          className="absolute right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-stone-600 shadow-md transition hover:bg-white hover:text-indigo-600 disabled:opacity-0 sm:flex dark:bg-slate-800/90 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-indigo-400">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M9 18l6-6-6-6" /></svg>
         </button>
       </div>
 
       {/* ─── Footer ─── */}
-      <footer className="shrink-0 flex items-center justify-center gap-2 border-t border-stone-200 bg-white/80 px-4 py-2.5 text-sm backdrop-blur">
+      <footer className="shrink-0 flex items-center justify-center gap-2 border-t border-stone-200 bg-white/80 px-4 py-2.5 text-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
         <button onClick={goPrev} disabled={index <= -1 || !!flipDir}
-          className="rounded-lg px-3 py-1.5 font-medium text-stone-600 transition hover:bg-stone-100 disabled:opacity-30">
+          className="rounded-lg px-3 py-1.5 font-medium text-stone-600 transition hover:bg-stone-100 disabled:opacity-30 dark:text-slate-400 dark:hover:bg-slate-800">
           ‹ Prev
         </button>
-        <span className="min-w-[120px] text-center font-semibold text-stone-700">
+        <span className="min-w-[120px] text-center font-semibold text-stone-700 dark:text-slate-300">
           {index === -1 ? 'Cover' : `Page ${index + 1} of ${notebook.pages.length}`}
         </span>
         <button
           onClick={index >= notebook.pages.length - 1 ? addPage : goNext}
           disabled={!!flipDir}
-          className="rounded-lg px-3 py-1.5 font-medium text-stone-600 transition hover:bg-stone-100 disabled:opacity-50">
+          className="rounded-lg px-3 py-1.5 font-medium text-stone-600 transition hover:bg-stone-100 disabled:opacity-50 dark:text-slate-400 dark:hover:bg-slate-800">
           {index >= notebook.pages.length - 1 ? '+ Add Page' : 'Next ›'}
         </button>
         {index >= 0 && notebook.pages.length > 1 && (
-          <button onClick={deletePage} className="ml-1 rounded-lg p-1.5 text-rose-400 transition hover:bg-rose-50 hover:text-rose-600" title="Delete page">
+          <button onClick={deletePage} className="ml-1 rounded-lg p-1.5 text-rose-400 transition hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-900/30" title="Delete page">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
             </svg>
@@ -261,9 +253,10 @@ export function Editor({ notebook, onChange, onBack, onExport, exporting, syncSl
 }
 
 /* ═══════════════════════════════════════
-   BookView — two-page stack with flip
-   Top layer: current page (animates)
-   Bottom layer: behind page (static)
+   BookView — realistic three‑layer page flip
+   Layer 0 (bottom) : behind page – always visible
+   Layer 1 (middle) : fold shadow overlay during flip
+   Layer 2 (top)    : current page with front/back faces
    ═══════════════════════════════════════ */
 
 function BookView({
@@ -277,7 +270,6 @@ function BookView({
   onChange: (el: NoteElement) => void;
   onUpdateNotebook: (patch: Partial<Notebook>) => void;
 }) {
-  // Determine what's visible behind the flipping page
   let behindIndex = index;
   if (flipDir === 'next') behindIndex = index + 1;
   if (flipDir === 'prev') behindIndex = index - 1;
@@ -285,20 +277,13 @@ function BookView({
   const behindPage = behindIndex >= 0 ? notebook.pages[behindIndex] : null;
   const currentPage = index >= 0 ? notebook.pages[index] : null;
 
-      return (
-        <div className="relative h-full w-full" style={{ transformStyle: 'preserve-3d' }}>
-          {/* ── Behind layer (only needed during flip to show what's underneath) ── */}
-          <div 
-            className="absolute inset-0"
-            style={{ 
-              display: flipDir ? 'block' : 'none',
-              transform: 'translateZ(-1px)', 
-              pointerEvents: 'none' 
-            }}
-          >
-            {behindIndex === -1 ? (
-              <Cover notebook={notebook} readOnly />
-            ) : behindPage ? (
+  return (
+    <div className="relative h-full w-full" style={{ transformStyle: 'preserve-3d' }}>
+      {/* ── Layer 0: Behind page — always visible underneath ── */}
+      <div className="absolute inset-0" style={{ pointerEvents: 'none' }}>
+        {behindIndex === -1 ? (
+          <Cover notebook={notebook} readOnly />
+        ) : behindPage ? (
           <PageSurface paper={behindPage.paper} elements={behindPage.elements}
             selected={null} pageSize={notebook.pageSize}
             onSelect={() => {}} onChange={() => {}} readOnly />
@@ -307,12 +292,14 @@ function BookView({
         )}
       </div>
 
-      {/* ── Top layer (current page, animates on flip) ── */}
+      {/* ── Layer 1: Fold shadow cast by the turning page ── */}
+      {flipDir && <div className={`absolute inset-0 fold-shadow-${flipDir}`} />}
+
+      {/* ── Layer 2: Current page (front/back faces) ── */}
       <div className="absolute inset-0"
         style={{
-          backfaceVisibility: 'visible',
           transformStyle: 'preserve-3d',
-          zIndex: flipDir ? 10 : 1,
+          zIndex: flipDir ? 20 : 10,
         }}
       >
         <div className={`h-full w-full ${
@@ -321,21 +308,31 @@ function BookView({
         }`}
           style={{ transformOrigin: 'left center', transformStyle: 'preserve-3d' }}
         >
-          {index === -1 ? (
-            <Cover notebook={notebook} onChange={onUpdateNotebook} />
-          ) : currentPage ? (
-            <PageSurface
-              key={currentPage.id}
-              paper={currentPage.paper}
-              elements={currentPage.elements}
-              selected={selected}
-              pageSize={notebook.pageSize}
-              onSelect={onSelect}
-              onChange={onChange}
-            />
-          ) : (
-            <EmptyPage paper={notebook.pages[notebook.pages.length - 1]?.paper || 'lined'} />
-          )}
+          {/* Front face */}
+          <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
+            {index === -1 ? (
+              <Cover notebook={notebook} onChange={onUpdateNotebook} />
+            ) : currentPage ? (
+              <PageSurface
+                key={currentPage.id}
+                paper={currentPage.paper}
+                elements={currentPage.elements}
+                selected={selected}
+                pageSize={notebook.pageSize}
+                onSelect={onSelect}
+                onChange={onChange}
+              />
+            ) : (
+              <EmptyPage paper={notebook.pages[notebook.pages.length - 1]?.paper || 'lined'} />
+            )}
+          </div>
+          {/* Back face (reverse side of paper) */}
+          <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+            <div className="h-full w-full rounded-r-md border border-stone-200 bg-white/95 dark:border-slate-700 dark:bg-slate-900/95"
+              style={{ boxShadow: 'inset 0 0 40px rgba(0,0,0,0.06)' }}>
+              <div className="margin-line" style={{ opacity: 0.2 }} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -357,7 +354,7 @@ function PageSurface({
   const def = PAGE_SIZES[pageSize];
   return (
     <div
-      className={`relative h-full w-full overflow-hidden rounded-r-md border border-stone-200 paper-${paper} page-corner-hint`}
+      className={`relative h-full w-full overflow-hidden rounded-r-md border border-stone-200 paper-${paper} page-corner-hint dark:border-slate-700`}
       style={{
         boxShadow: '4px 4px 24px rgba(0,0,0,0.12), inset 10px 0 24px -16px rgba(0,0,0,0.22)',
       }}
@@ -371,7 +368,7 @@ function PageSurface({
       ))}
       {elements.length === 0 && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <p className="text-sm text-stone-300">Use the toolbar to add notes ✏️</p>
+          <p className="text-sm text-stone-300 dark:text-slate-500">Use the toolbar to add notes ✏️</p>
         </div>
       )}
     </div>
@@ -380,7 +377,7 @@ function PageSurface({
 
 function EmptyPage({ paper }: { paper: PaperStyle }) {
   return (
-    <div className={`relative h-full w-full rounded-r-md border border-stone-200 paper-${paper}`}
+    <div className={`relative h-full w-full rounded-r-md border border-stone-200 paper-${paper} dark:border-slate-700`}
       style={{ boxShadow: '4px 4px 24px rgba(0,0,0,0.08)' }}
     />
   );

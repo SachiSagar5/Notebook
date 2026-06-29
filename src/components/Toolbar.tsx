@@ -28,9 +28,9 @@ function ToolBtn({
     <button
       onClick={onClick}
       title={label}
-      className="flex flex-col items-center gap-1 rounded-xl px-3 py-2 text-[11px] font-medium text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-600 active:scale-95"
+      className="flex flex-col items-center gap-1 rounded-xl px-3 py-2 text-[11px] font-medium text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-600 active:scale-95 dark:text-slate-400 dark:hover:bg-indigo-900/40 dark:hover:text-indigo-400"
     >
-      <span className="text-slate-500">{children}</span>
+      <span className="text-slate-500 dark:text-slate-500">{children}</span>
       <span className="hidden sm:block">{label}</span>
     </button>
   );
@@ -59,7 +59,7 @@ export function Toolbar(props: Props) {
 
   return (
     <div className="relative">
-      <div className="no-scrollbar flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white/90 p-1.5 shadow-sm backdrop-blur">
+      <div className="no-scrollbar flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white/90 p-1.5 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
         <ToolBtn label="Text" onClick={props.onAddText}>
           <Icon path="M4 7V4h16v3M9 20h6M12 4v16" />
         </ToolBtn>
@@ -75,7 +75,7 @@ export function Toolbar(props: Props) {
         <ToolBtn label="Clip Art" onClick={() => setShowClip((s) => !s)}>
           <Icon path="M5 12h14M12 5v14M5 5l14 14" />
         </ToolBtn>
-        <div className="mx-1 h-8 w-px bg-slate-200" />
+        <div className="mx-1 h-8 w-px bg-slate-200 dark:bg-slate-700" />
         <ToolBtn label="Paper" onClick={() => setShowPaper((s) => !s)}>
           <Icon path="M4 4h16v16H4zM4 9h16M4 14h16" />
         </ToolBtn>
@@ -83,7 +83,7 @@ export function Toolbar(props: Props) {
       </div>
 
       {showClip && (
-        <div className="fade-up absolute right-0 top-full z-30 mt-2 grid w-64 grid-cols-5 gap-1 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl">
+        <div className="fade-up absolute right-0 top-full z-30 mt-2 grid w-64 grid-cols-5 gap-1 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl dark:border-slate-700 dark:bg-slate-900">
           {CLIPART_KINDS.map((k) => (
             <button
               key={k}
@@ -91,7 +91,7 @@ export function Toolbar(props: Props) {
                 props.onAddClipart(k);
                 setShowClip(false);
               }}
-              className="flex h-11 w-11 items-center justify-center rounded-lg p-1.5 transition hover:bg-indigo-50"
+              className="flex h-11 w-11 items-center justify-center rounded-lg p-1.5 transition hover:bg-indigo-50 dark:hover:bg-indigo-900/40"
             >
               <Clipart kind={k} color={TOOL_COLOR} />
             </button>
@@ -100,7 +100,7 @@ export function Toolbar(props: Props) {
       )}
 
       {showPaper && (
-        <div className="fade-up absolute right-0 top-full z-30 mt-2 w-44 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+        <div className="fade-up absolute right-0 top-full z-30 mt-2 w-44 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-900">
           {papers.map((p) => (
             <button
               key={p.id}
@@ -108,8 +108,8 @@ export function Toolbar(props: Props) {
                 props.onPaperChange(p.id);
                 setShowPaper(false);
               }}
-              className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition hover:bg-indigo-50 ${
-                props.paper === p.id ? 'bg-indigo-50 font-semibold text-indigo-600' : 'text-slate-600'
+              className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition hover:bg-indigo-50 dark:hover:bg-indigo-900/40 ${
+                props.paper === p.id ? 'bg-indigo-50 font-semibold text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400'
               }`}
             >
               {p.label}

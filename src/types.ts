@@ -105,3 +105,10 @@ export interface Notebook {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface User {
+  sub: string;
+  email: string;
+  name?: string;
+  picture?: string;
+}

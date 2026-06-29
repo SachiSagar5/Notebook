@@ -12,8 +12,8 @@ const STICKY_COLORS = ['#fef08a', '#fecaca', '#bbf7d0', '#bae6fd', '#ddd6fe', '#
 
 export function PropertyPanel({ el, onChange, onDelete, onClose }: Props) {
   return (
-    <div className="fade-up flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white/95 px-3 py-2 shadow-lg backdrop-blur">
-      <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+    <div className="fade-up flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white/95 px-3 py-2 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-slate-900/95">
+      <span className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
         {el.type}
       </span>
 
@@ -40,7 +40,7 @@ export function PropertyPanel({ el, onChange, onDelete, onClose }: Props) {
         <button
           onClick={() => onChange({ ...el, rotation: ((el.rotation || 0) + 15) % 360 })}
           title="Rotate"
-          className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100"
+          className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 12a9 9 0 1 1-3-6.7L21 8" />
@@ -50,7 +50,7 @@ export function PropertyPanel({ el, onChange, onDelete, onClose }: Props) {
         <button
           onClick={onDelete}
           title="Delete"
-          className="rounded-lg p-2 text-rose-500 transition hover:bg-rose-50"
+          className="rounded-lg p-2 text-rose-500 transition hover:bg-rose-50 dark:hover:bg-rose-900/30"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
@@ -58,7 +58,7 @@ export function PropertyPanel({ el, onChange, onDelete, onClose }: Props) {
         </button>
         <button
           onClick={onClose}
-          className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100"
+          className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 dark:text-slate-500 dark:hover:bg-slate-800"
           title="Close"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -77,27 +77,27 @@ function TextControls({ t, onChange }: { t: TextElement; onChange: (e: NoteEleme
       <div className="flex items-center gap-1">
         <button
           onClick={() => onChange({ ...t, fontSize: Math.max(10, t.fontSize - 2) })}
-          className="rounded-md bg-slate-100 px-2 py-1 text-sm font-bold text-slate-600"
+          className="rounded-md bg-slate-100 px-2 py-1 text-sm font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300"
         >
           −
         </button>
-        <span className="w-8 text-center text-xs text-slate-500">{t.fontSize}</span>
+        <span className="w-8 text-center text-xs text-slate-500 dark:text-slate-400">{t.fontSize}</span>
         <button
           onClick={() => onChange({ ...t, fontSize: Math.min(72, t.fontSize + 2) })}
-          className="rounded-md bg-slate-100 px-2 py-1 text-sm font-bold text-slate-600"
+          className="rounded-md bg-slate-100 px-2 py-1 text-sm font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300"
         >
           +
         </button>
       </div>
       <button
         onClick={() => onChange({ ...t, bold: !t.bold })}
-        className={`rounded-md px-2 py-1 text-sm font-bold ${t.bold ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-600'}`}
+        className={`rounded-md px-2 py-1 text-sm font-bold ${t.bold ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'}`}
       >
         B
       </button>
       <button
         onClick={() => onChange({ ...t, italic: !t.italic })}
-        className={`rounded-md px-2 py-1 text-sm italic ${t.italic ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-600'}`}
+        className={`rounded-md px-2 py-1 text-sm italic ${t.italic ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'}`}
       >
         I
       </button>
@@ -116,17 +116,17 @@ function TableControls({ t, onChange }: { t: TableElement; onChange: (e: NoteEle
   }
   return (
     <>
-      <div className="flex items-center gap-1 text-xs text-slate-500">
+      <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
         <span>Rows</span>
-        <button onClick={() => resize(t.rows - 1, t.cols)} className="rounded bg-slate-100 px-2 py-0.5 font-bold">−</button>
+        <button onClick={() => resize(t.rows - 1, t.cols)} className="rounded bg-slate-100 px-2 py-0.5 font-bold dark:bg-slate-800">−</button>
         <span className="w-4 text-center">{t.rows}</span>
-        <button onClick={() => resize(t.rows + 1, t.cols)} className="rounded bg-slate-100 px-2 py-0.5 font-bold">+</button>
+        <button onClick={() => resize(t.rows + 1, t.cols)} className="rounded bg-slate-100 px-2 py-0.5 font-bold dark:bg-slate-800">+</button>
       </div>
-      <div className="flex items-center gap-1 text-xs text-slate-500">
+      <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
         <span>Cols</span>
-        <button onClick={() => resize(t.rows, t.cols - 1)} className="rounded bg-slate-100 px-2 py-0.5 font-bold">−</button>
+        <button onClick={() => resize(t.rows, t.cols - 1)} className="rounded bg-slate-100 px-2 py-0.5 font-bold dark:bg-slate-800">−</button>
         <span className="w-4 text-center">{t.cols}</span>
-        <button onClick={() => resize(t.rows, t.cols + 1)} className="rounded bg-slate-100 px-2 py-0.5 font-bold">+</button>
+        <button onClick={() => resize(t.rows, t.cols + 1)} className="rounded bg-slate-100 px-2 py-0.5 font-bold dark:bg-slate-800">+</button>
       </div>
       <ColorRow colors={TEXT_COLORS} value={t.color} onPick={(c) => onChange({ ...t, color: c })} />
     </>

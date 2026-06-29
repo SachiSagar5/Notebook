@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
 
 html, body, #root {
   height: 100%;
@@ -11,13 +12,20 @@ body {
   overscroll-behavior: none;
 }
 
+:root { color-scheme: light; }
+.dark { color-scheme: dark; }
+
 /* ═══════════════════════════════════════
-   Paper textures — white pages
+   Paper textures — white pages / dark pages
    ═══════════════════════════════════════ */
 .paper-lined {
   background-color: #ffffff;
   background-image: linear-gradient(to bottom, transparent 31px, #e3eaf2 31px, #e3eaf2 32px, transparent 32px);
   background-size: 100% 32px;
+}
+.dark .paper-lined {
+  background-color: #1e293b;
+  background-image: linear-gradient(to bottom, transparent 31px, #334155 31px, #334155 32px, transparent 32px);
 }
 .paper-grid {
   background-color: #ffffff;
@@ -26,13 +34,26 @@ body {
     linear-gradient(to bottom, #eef2f6 1px, transparent 1px);
   background-size: 26px 26px;
 }
+.dark .paper-grid {
+  background-color: #1e293b;
+  background-image:
+    linear-gradient(to right, #334155 1px, transparent 1px),
+    linear-gradient(to bottom, #334155 1px, transparent 1px);
+}
 .paper-dotted {
   background-color: #ffffff;
   background-image: radial-gradient(#d7dfea 1.3px, transparent 1.3px);
   background-size: 24px 24px;
 }
+.dark .paper-dotted {
+  background-color: #1e293b;
+  background-image: radial-gradient(#334155 1.3px, transparent 1.3px);
+}
 .paper-plain {
   background-color: #ffffff;
+}
+.dark .paper-plain {
+  background-color: #1e293b;
 }
 
 .margin-line {
@@ -46,13 +67,20 @@ body {
   pointer-events: none;
   z-index: 0;
 }
+.dark .margin-line {
+  background: #f472b6;
+  opacity: 0.25;
+}
 
 /* ═══════════════════════════════════════
    Realistic 3D Page Turn
-   Two-page stack: behind (static) + top (animates)
-   Top page rotates 0° → −180° around left spine.
-   backface-visibility:hidden ensures the behind
-   page shows through once the page passes 90°.
+   Three‑layer stack:
+     Layer 0 – behind page (always visible)
+     Layer 1 – fold shadow overlay (during flip)
+     Layer 2 – front/back faces of turning page
+   The page rotates around the left spine (left
+   centre). The front face is visible 0→90°, the
+   back face 90→180° (via rotateY(180deg)).
    ═══════════════════════════════════════ */
 
 /* ── Forward (next page) ── */
@@ -60,52 +88,36 @@ body {
   0% {
     transform: perspective(2200px) rotateY(0deg) scaleX(1);
     filter: brightness(1);
-    box-shadow:
-      5px 5px 20px rgba(0,0,0,.12),
-      inset 8px 0 24px -14px rgba(0,0,0,.22);
   }
-  10% {
-    transform: perspective(2200px) rotateY(-6deg) scaleX(1.01);
+  8% {
+    transform: perspective(2200px) rotateY(-8deg) scaleX(1.015);
     filter: brightness(0.98);
-    box-shadow:
-      5px 5px 20px rgba(0,0,0,.12),
-      inset 18px 0 30px -10px rgba(0,0,0,.35);
   }
-  35% {
-    transform: perspective(2200px) rotateY(-45deg) scaleX(0.97);
-    filter: brightness(0.94);
-    box-shadow:
-      4px 3px 28px rgba(0,0,0,.18),
-      inset 6px 0 40px -6px rgba(0,0,0,.45);
+  30% {
+    transform: perspective(2200px) rotateY(-40deg) scaleX(0.96);
+    filter: brightness(0.93);
   }
-  55% {
-    transform: perspective(2200px) rotateY(-82deg) scaleX(0.90);
-    filter: brightness(0.88);
-    box-shadow:
-      2px 2px 20px rgba(0,0,0,.1),
-      inset 2px 0 30px 0 rgba(0,0,0,.5);
+  50% {
+    transform: perspective(2200px) rotateY(-80deg) scaleX(0.89);
+    filter: brightness(0.87);
   }
-  70% {
-    /* Just past edge-on; behind page is now dominant */
-    transform: perspective(2200px) rotateY(-105deg) scaleX(0.93);
-    filter: brightness(0.92);
-    box-shadow:
-      -3px 3px 16px rgba(0,0,0,.08),
-      inset -8px 0 20px 0 rgba(0,0,0,.2);
+  65% {
+    /* Edge-on — max shadow / narrowest */
+    transform: perspective(2200px) rotateY(-100deg) scaleX(0.87);
+    filter: brightness(0.84);
   }
-  88% {
-    transform: perspective(2200px) rotateY(-160deg) scaleX(1.01);
-    filter: brightness(0.97);
-    box-shadow:
-      -4px 4px 14px rgba(0,0,0,.06),
-      inset -14px 0 16px -8px rgba(0,0,0,.15);
+  80% {
+    /* Back face now dominant */
+    transform: perspective(2200px) rotateY(-145deg) scaleX(0.95);
+    filter: brightness(0.93);
+  }
+  95% {
+    transform: perspective(2200px) rotateY(-172deg) scaleX(1.005);
+    filter: brightness(0.98);
   }
   100% {
     transform: perspective(2200px) rotateY(-180deg) scaleX(1);
     filter: brightness(1);
-    box-shadow:
-      -4px 4px 12px rgba(0,0,0,.05),
-      inset -8px 0 14px -8px rgba(0,0,0,.1);
   }
 }
 
@@ -114,68 +126,95 @@ body {
   0% {
     transform: perspective(2200px) rotateY(-180deg) scaleX(1);
     filter: brightness(1);
-    box-shadow:
-      -4px 4px 12px rgba(0,0,0,.05),
-      inset -8px 0 14px -8px rgba(0,0,0,.1);
   }
-  12% {
-    transform: perspective(2200px) rotateY(-160deg) scaleX(1.01);
-    filter: brightness(0.97);
-    box-shadow:
-      -4px 4px 14px rgba(0,0,0,.06),
-      inset -14px 0 16px -8px rgba(0,0,0,.15);
-  }
-  30% {
-    transform: perspective(2200px) rotateY(-105deg) scaleX(0.93);
-    filter: brightness(0.92);
-    box-shadow:
-      -3px 3px 16px rgba(0,0,0,.08),
-      inset -8px 0 20px 0 rgba(0,0,0,.2);
-  }
-  45% {
-    transform: perspective(2200px) rotateY(-82deg) scaleX(0.90);
-    filter: brightness(0.88);
-    box-shadow:
-      2px 2px 20px rgba(0,0,0,.1),
-      inset 2px 0 30px 0 rgba(0,0,0,.5);
-  }
-  65% {
-    transform: perspective(2200px) rotateY(-45deg) scaleX(0.97);
-    filter: brightness(0.94);
-    box-shadow:
-      4px 3px 28px rgba(0,0,0,.18),
-      inset 6px 0 40px -6px rgba(0,0,0,.45);
-  }
-  90% {
-    transform: perspective(2200px) rotateY(-6deg) scaleX(1.01);
+  5% {
+    transform: perspective(2200px) rotateY(-172deg) scaleX(1.005);
     filter: brightness(0.98);
-    box-shadow:
-      5px 5px 20px rgba(0,0,0,.12),
-      inset 18px 0 30px -10px rgba(0,0,0,.35);
+  }
+  20% {
+    transform: perspective(2200px) rotateY(-145deg) scaleX(0.95);
+    filter: brightness(0.93);
+  }
+  35% {
+    transform: perspective(2200px) rotateY(-100deg) scaleX(0.87);
+    filter: brightness(0.84);
+  }
+  50% {
+    transform: perspective(2200px) rotateY(-80deg) scaleX(0.89);
+    filter: brightness(0.87);
+  }
+  70% {
+    transform: perspective(2200px) rotateY(-40deg) scaleX(0.96);
+    filter: brightness(0.93);
+  }
+  92% {
+    transform: perspective(2200px) rotateY(-8deg) scaleX(1.015);
+    filter: brightness(0.98);
   }
   100% {
     transform: perspective(2200px) rotateY(0deg) scaleX(1);
     filter: brightness(1);
-    box-shadow:
-      5px 5px 20px rgba(0,0,0,.12),
-      inset 8px 0 24px -14px rgba(0,0,0,.22);
   }
 }
 
 .animate-book-forward {
-  animation: flip-forward 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) both;
+  animation: flip-forward 0.75s cubic-bezier(0.33, 0.68, 0.3, 0.98) both;
   transform-origin: left center;
   transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, filter, box-shadow;
+  will-change: transform, filter;
 }
 
 .animate-book-back {
-  animation: flip-backward 0.7s cubic-bezier(0.4, 0.0, 0.2, 1) both;
+  animation: flip-backward 0.75s cubic-bezier(0.33, 0.68, 0.3, 0.98) both;
   transform-origin: left center;
   transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, filter, box-shadow;
+  will-change: transform, filter;
+}
+
+/* ── Fold shadow overlay ──
+   A gradient radiating from the spine that intensifies
+   at mid‑flip and fades once the page is fully over. */
+@keyframes fold-shadow-next {
+  0%   { opacity: 0; }
+  15%  { opacity: 0.4; }
+  50%  { opacity: 0.9; }
+  70%  { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+@keyframes fold-shadow-prev {
+  0%   { opacity: 0; }
+  20%  { opacity: 0.6; }
+  50%  { opacity: 0.9; }
+  85%  { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
+.fold-shadow-next {
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.25)  0%,
+    rgba(0,0,0,0.12)  4%,
+    rgba(0,0,0,0.06) 10%,
+    rgba(0,0,0,0.02) 18%,
+    transparent       28%
+  );
+  animation: fold-shadow-next 0.75s ease both;
+}
+
+.fold-shadow-prev {
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(
+    270deg,
+    rgba(0,0,0,0.25)  0%,
+    rgba(0,0,0,0.12)  4%,
+    rgba(0,0,0,0.06) 10%,
+    rgba(0,0,0,0.02) 18%,
+    transparent       28%
+  );
+  animation: fold-shadow-prev 0.75s ease both;
 }
 
 /* ═══════════════════════════════════════
@@ -206,8 +245,14 @@ body {
   pointer-events: none;
   transition: all 0.3s ease;
 }
+.dark .page-corner-hint::after {
+  background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,.04) 50%);
+}
 .page-corner-hint:hover::after {
   width: 36px;
   height: 36px;
   background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.1) 50%);
+}
+.dark .page-corner-hint:hover::after {
+  background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,.07) 50%);
 }
